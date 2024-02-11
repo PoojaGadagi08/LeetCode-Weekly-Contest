@@ -177,3 +177,76 @@ Constraints:
 1 <= words.length <= 1000
 1 <= words[i].length <= 100
 words[i] consists only of lowercase English letters.
+
+
+
+  class Solution {
+        public int maxPalindromesAfterOperations(String[] words) {
+        int n = words.length, A[] = new int[n];
+        for (int i = 0; i < n; ++i) {
+            A[i] = words[i].length();
+        }
+        Arrays.sort(A);
+
+        Map<Character, Integer> count = new HashMap<>();
+        for (String w : words) {
+            for (char c : w.toCharArray()) {
+                count.put(c, count.getOrDefault(c, 0) + 1);
+            }
+        }
+
+        int even = 0, odd = 0;
+        for (Map.Entry<Character, Integer> entry : count.entrySet()) {
+            even += entry.getValue() / 2;
+            odd += entry.getValue() % 2;
+        }
+
+        for (int i = 0; i < n; i++) {
+            odd -= A[i] % 2;
+            if (odd < 0) {
+                even--;
+                odd += 2;
+            }
+            even -= A[i] / 2;
+            if (even < 0) {
+                return i;
+            }
+        }
+        return n;
+    }
+}
+// class Solution {
+//     public int maxPalindromesAfterOperations(String[] words) {
+//           Map<Character, Integer>[] charFrequency = new HashMap[26];
+//         int n = words.length;
+        
+//         for (int i = 0; i < n; i++) {
+//             for (char ch : words[i].toCharArray()) {
+//                 charFrequency[i] = charFrequency[i] == null ? new HashMap<>() : charFrequency[i];
+//                 charFrequency[i].put(ch, charFrequency[i].getOrDefault(ch, 0) + 1);
+//             }
+//         }
+
+//         int maxPalindromes = 0;
+//         int singleOddFreq = 0;
+
+//         for (int i = 0; i < n; i++) {
+//             if (charFrequency[i] == null) {
+//                 continue;
+//             }
+
+//             for (Map.Entry<Character, Integer> entry : charFrequency[i].entrySet()) {
+//                 int freq = entry.getValue();
+//                 if (freq % 2 == 0) {
+//                     maxPalindromes += freq / 2;
+//                 } else {
+//                     maxPalindromes += (freq - 1) / 2;
+//                     singleOddFreq = 1;
+//                 }
+//             }
+//         }
+
+//         return maxPalindromes + singleOddFreq;
+
+//     }
+// }
